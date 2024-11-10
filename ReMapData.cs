@@ -16,7 +16,7 @@ namespace SimpleParserUtil
 {
     public static class ReMapData
     {
-        public static void Run(
+        public static void ReMap(
         DataTree<Point3d> PtsSet,
         Vector3d UVVec,
         ref DataTree<Point3d> U_0,
@@ -35,27 +35,27 @@ namespace SimpleParserUtil
             var DirV_1 = new DataTree<Point3d>();
             var DirV_Pattern = new DataTree<bool>();
 
-            FindPattern(PtsSet, UVec, ref DirU_0, ref DirU_1, ref DirU_Pattern);
+            FindPattern(PtsSet, UVVec, ref DirU_0, ref DirU_1, ref DirU_Pattern);
 
             U_0 = DirU_0;
             U_1 = DirU_1;
             U_Pattern = DirU_Pattern;
-            var PtsSetV = FlipPoints(PtsSet, UVec, out var SplitHint);
-            var VVec = new Vector3d(UVec);
+            var PtsSetV = FlipPoints(PtsSet, UVVec, out var SplitHint);
+            var VVec = new Vector3d(UVVec);
             VVec.Rotate(Math.PI * 0.5, Vector3d.ZAxis);
             FindPattern(PtsSetV, VVec, ref DirV_0, ref DirV_1, ref DirV_Pattern, true, SplitHint);
             V_0 = DirV_0;
             V_1 = DirV_1;
             V_Pattern = DirV_Pattern;
         }
-        public static void FindPattern(
+        private static void FindPattern(
         DataTree<Point3d> PtsSet,
-    Vector3d UVec,
-    ref DataTree<Point3d> Dir_0,
-    ref DataTree<Point3d> Dir_1,
-    ref DataTree<bool> Dir_Pattern,
-    bool Inverse = true,
-    List<List<int>> SplitHint = null
+        Vector3d UVec,
+        ref DataTree<Point3d> Dir_0,
+        ref DataTree<Point3d> Dir_1,
+        ref DataTree<bool> Dir_Pattern,
+        bool Inverse = true,
+        List<List<int>> SplitHint = null
     )
         {
             Dir_0 = new DataTree<Point3d>();
@@ -145,7 +145,7 @@ namespace SimpleParserUtil
             if (SplitHint != null)
                 Dir_Pattern = SplitTree<bool>(Dir_Pattern, SplitHint);
         }
-        public static DataTree<T> SplitTree<T>(DataTree<T> Trees, List<List<int>> Split)
+        private static DataTree<T> SplitTree<T>(DataTree<T> Trees, List<List<int>> Split)
         {
             var NewSplitTree = new DataTree<T>();
             int PathCount = 0;
@@ -179,7 +179,7 @@ namespace SimpleParserUtil
             }
             return NewSplitTree;
         }
-        public static DataTree<Point3d> FlipPoints(DataTree<Point3d> PtsSet, Vector3d UVec, out List<List<int>> SplitHint)
+        private static DataTree<Point3d> FlipPoints(DataTree<Point3d> PtsSet, Vector3d UVec, out List<List<int>> SplitHint)
         {
             double Angle = -Vector3d.VectorAngle(UVec, Vector3d.XAxis);
             var XArr = new List<double>();
@@ -274,7 +274,7 @@ namespace SimpleParserUtil
     */
             return SplitTree(NewTree, Distance, out SplitHint);
         }
-        public static DataTree<Point3d> SplitTree(DataTree<Point3d> NewTree, double Distance, out List<List<int>> SplitArr)
+        private static DataTree<Point3d> SplitTree(DataTree<Point3d> NewTree, double Distance, out List<List<int>> SplitArr)
         {
             var NewSplitTree = new DataTree<Point3d>();
             int PathCount = 0;
@@ -323,7 +323,7 @@ namespace SimpleParserUtil
             }
             return NewSplitTree;
         }
-        public static int Find(IEnumerable<Point3d> AEnum, Point3d item)
+        private static int Find(IEnumerable<Point3d> AEnum, Point3d item)
         {
             var AList = AEnum.ToList();
             for (int i = 0; i < AList.Count; i++)
